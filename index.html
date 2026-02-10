@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Login Profile</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        #user_pic { border-radius: 50%; width: 90px; height: 90px; margin-bottom: 1rem; border: 3px solid #4285f4; }
+        button { background-color: #fff; border: 1px solid #dadce0; color: #3c4043; padding: 8px 24px; border-radius: 4px; cursor: pointer; font-weight: 500; margin-top: 1rem; }
+        button:hover { background-color: #f7f8f8; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
+        
+        <div id="login_section">
+            <h2 style="color: #5f6368;">Sign In</h2>
+            <div class="g_id_signin" data-type="standard"></div>
+        </div>
+
+        <div id="user_display" style="display:none;">
+            <img id="user_pic" src="" alt="Profile">
+            <h3 id="user_name" style="margin: 5px 0;"></h3>
+            <p id="user_email" style="color: #70757a; font-size: 14px;"></p>
+            <button onclick="logout()">Sign Out</button>
+        </div>
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            document.getElementById('user_name').innerText = payload.name;
+            document.getElementById('user_email').innerText = payload.email;
+            document.getElementById('user_pic').src = payload.picture;
+            
+            document.getElementById('login_section').style.display = 'none';
+            document.getElementById('user_display').style.display = 'block';
+        }
+
+        function logout() {
+            google.accounts.id.disableAutoSelect();
+            location.reload();
+        }
+    </script>
+</body>
+</html>
